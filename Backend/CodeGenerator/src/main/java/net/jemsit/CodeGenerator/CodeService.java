@@ -4,16 +4,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class CodeService {
 
     private final CodeRepository codeRepository;
 
-    public CodeService(CodeRepository codeRepository) {
-        this.codeRepository = codeRepository;
-    }
-
     public String getCode(String username) {
-        String randomCode = String.valueOf(Math.random() * 1000);
+        String randomCode = String.valueOf((int)(Math.random() * 10000));
         var code = CodeEntity.builder()
                 .code(randomCode)
                 .username(username)

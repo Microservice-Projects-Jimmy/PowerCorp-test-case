@@ -3,9 +3,8 @@ package net.jemsit.CodeGenerator;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-@EntityScan
+@Entity
 @Data
 @Builder
 @Table(name = "codes")
