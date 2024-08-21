@@ -1,0 +1,9 @@
+package net.jemsit.CodeGenerator;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface CodeRepository extends JpaRepository<CodeEntity, Long> {
+    List<CodeEntity> findByUsername(String username);
+}
