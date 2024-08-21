@@ -3,6 +3,8 @@ package net.jemsit.CodeGenerator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class CodeService {
@@ -18,4 +20,9 @@ public class CodeService {
         codeRepository.save(code);
         return randomCode;
     }
+
+    public List<Code> getHistory(String username) {
+        return codeRepository.findByUsername(username).stream().map(Code::toCode).toList();
+    }
+
 }

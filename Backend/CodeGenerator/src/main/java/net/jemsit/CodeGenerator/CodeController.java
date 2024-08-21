@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("code")
 @AllArgsConstructor
@@ -21,5 +23,10 @@ public class CodeController {
                         .code(codeService.getCode(username))
                         .build()
         );
+    }
+
+    @GetMapping("get-all/{username}")
+    public ResponseEntity<List<Code>> getHistoryOfUser(@PathVariable String username) {
+        return ResponseEntity.ok().body(codeService.getHistory(username));
     }
 }

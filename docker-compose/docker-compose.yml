@@ -1,20 +1,6 @@
 version: '3.3'
 
 services:
-  blog-db:
-    container_name: codes-db
-    image: postgres:12.9-alpine
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: codes
-    ports:
-      - "5433:5432"
-    volumes:
-      - ./pg_data_codes:/var/lib/postgresql/data
-    networks:
-      blog-network:
 
   users-db:
     container_name: users-db
@@ -29,9 +15,41 @@ services:
     volumes:
       - ./pg_data_users:/var/lib/postgresql/data
     networks:
-      blog-network:
+      codes-network:
+
+  codes-db:
+    container_name: codes-db
+    image: postgres:12.9-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: codes
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./pg_data_codes:/var/lib/postgresql/data
+    networks:
+      codes-network:
+
+  clicks-db:
+    container_name: clicks-db
+    image: postgres:12.9-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: clicks
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./pg_data_clicks:/var/lib/postgresql/data
+    networks:
+      codes-network:
+
+
 
 networks:
-  blog-network:
+  codes-network:
     name: codes-network
     driver: bridge

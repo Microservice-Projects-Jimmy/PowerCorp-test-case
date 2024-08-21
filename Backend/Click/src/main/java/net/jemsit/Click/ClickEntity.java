@@ -1,4 +1,4 @@
-package net.jemsit.CodeGenerator;
+package net.jemsit.Click;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,18 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "codes")
-public class CodeEntity {
+@Builder
+@Entity
+@Table(name = "clicks")
+public class ClickEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String username;
 
-    private String code;
+    private float XCoordinate;
+
+    private float YCoordinate;
+
 }
