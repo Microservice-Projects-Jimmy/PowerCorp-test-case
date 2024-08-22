@@ -50,7 +50,7 @@ public class SecurityConfig {
             if (!userDetailsManager.userExists("admin@mail.com")) {
                 userDetailsManager.createUser(User.builder()
                         .username("admin@mail.com")
-                        .password(passwordEncoder.encode("admin"))
+                        .password(passwordEncoder.encode("dodge"))
                         .authorities("admin")
                         .build());
             }

@@ -2,6 +2,9 @@
 import router from '@/router'
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
+const toast = useToast()
 
 const code = ref<Number>()
 const codeFromServer = ref()
@@ -28,6 +31,18 @@ const confirmCode = () => {
     .then((res) => {
       console.log(res)
       router.push('/clicks')
+    })
+    .catch((err) => {
+      toast.add({
+        severity: 'error',
+        summary: 'Info',
+        detail: err.response.data.message,
+        life: 3000
+      })
+
+      codeFromServer.value = null
+      otp.value = Array(4).fill('')
+      updateCodes()
     })
 }
 const startProgress = () => {
@@ -81,7 +96,9 @@ const handleKeyDown = (e: KeyboardEvent) => {
   ) {
     e.preventDefault()
   }
-
+  if (e.key === 'Enter') {
+    confirmCode()
+  }
   if (e.key === 'Delete' || e.key === 'Backspace') {
     const index = otp.value.indexOf('')
     if (index > 0) {
@@ -124,6 +141,7 @@ const resetOtp = () => {
 
 <template>
   <div>
+    <Toast />
     <section class="flex justify-center bg-white py-10 dark:bg-dark">
       <div class="container">
         <form id="otp-form" class="flex flex-col items-center gap-4" @submit.prevent="confirmCode">
@@ -142,6 +160,7 @@ const resetOtp = () => {
             />
           </div>
           <button
+            type="submit"
             class="mt-4 w-full max-w-xs rounded-lg bg-blue-500 p-2 text-white font-semibold hover:bg-blue-600"
           >
             Confirm Code
@@ -150,13 +169,13 @@ const resetOtp = () => {
         <div class="flex flex-col items-center">
           <button
             @click="resetOtp"
-            class="mt-4 w-full max-w-xs rounded-lg bg-blue-500 p-2 text-white font-semibold hover:bg-blue-600"
+            class="mt-4 w-full max-w-xs rounded-lg bg-red-700 p-2 text-white font-semibold hover:bg-red-800"
           >
             Reset
           </button>
           <button
             @click="getCode"
-            class="mt-4 w-full max-w-xs rounded-lg bg-blue-500 p-2 text-white font-semibold hover:bg-blue-600"
+            class="mt-4 w-full max-w-xs rounded-lg bg-green-800 p-2 text-white font-semibold hover:bg-green-700"
           >
             Get Code
           </button>
@@ -182,7 +201,7 @@ const resetOtp = () => {
                 d="m9 17 8 2L9 1 1 19l8-2Zm0 0V9"
               />
             </svg>
-            <div class="ps-4 text-sm font-normal">Type code {{ codeFromServer }}</div>
+            <div class="ps-4 text-lg font-normal">Type code {{ codeFromServer }}</div>
             <div
               class="absolute bottom-0 left-0 h-1 bg-white"
               :style="{ width: progressBarWidth + '%' }"
@@ -238,15 +257,15 @@ const resetOtp = () => {
                 scope="row"
                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                code
+                {{ code.username }}
               </th>
               <td class="px-6 py-4">
                 {{ code.code }}
               </td>
               <td class="px-6 py-4">
-                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >Edit</a
-                >
+                <a href="#" class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                  code.createdAt
+                }}</a>
               </td>
             </tr>
           </tbody>

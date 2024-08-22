@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
+
 @Entity
 @Data
 @Builder
@@ -20,4 +22,6 @@ public class CodeEntity {
     private String username;
 
     private String code;
+
+    private OffsetDateTime createdAt;
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -18,9 +19,13 @@ public class CodeService extends HelperFunctions {
 
     public String generateCode(String username) {
         String randomCode = String.valueOf((int)(Math.random() * 10000));
+        while (randomCode.length()<4){
+            randomCode = String.valueOf((int)(Math.random() * 10000));
+        }
         var code = CodeEntity.builder()
                 .code(randomCode)
                 .username(username)
+                .createdAt(OffsetDateTime.now())
                 .build();
         codeRepository.save(code);
         redisService.saveData(username, Long.parseLong(randomCode));
@@ -39,7 +44,8 @@ public class CodeService extends HelperFunctions {
     public String confirm(String username, long code) {
         var codeFromRedis = redisService.getData(username);
         if (codeFromRedis == null) throw new CodeIsExpiredException();
-        return code == (long) codeFromRedis?"Confirmed":"Not Confirmed";
+        if (code == (long) codeFromRedis) return "Confirmed";
+        else throw new CodeIsWrongException();
     }
 
 }

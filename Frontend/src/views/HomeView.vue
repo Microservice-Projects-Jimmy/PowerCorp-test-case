@@ -2,9 +2,14 @@
 import router from '@/router'
 import axios from 'axios'
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user-store'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
+const toast = useToast()
 
 const username = ref('')
 const password = ref('')
+const store = useUserStore()
 
 const BASE_URL = import.meta.env.VITE_API_URL
 const signIn = () => {
@@ -16,13 +21,24 @@ const signIn = () => {
 
       localStorage.setItem('username', username.value)
       localStorage.setItem('token', res.data.token)
+      store.user = username.value
       router.push('/code')
+    })
+    .catch((err) => {
+      console.log(err.response)
+      toast.add({
+        severity: 'error',
+        summary: 'Info',
+        detail: err.response.data.message,
+        life: 3000
+      })
     })
 }
 </script>
 
 <template>
   <main>
+    <Toast />
     <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
         <img

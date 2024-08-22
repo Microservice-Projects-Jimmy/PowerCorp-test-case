@@ -40,6 +40,8 @@ public class CodeController {
             return ResponseEntity.ok().body(codeService.confirm(request.getUsername(), request.getCode()));
         } catch (CodeIsExpiredException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code is expired!");
+        }catch (CodeIsWrongException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code is wrong!");
         }
     }
 }

@@ -50,7 +50,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="flex flex-col items-center">
-    <h1>Welcome to clicks page</h1>
+    <h1 class="my-10">Welcome to clicks page! Click somewhere!</h1>
     <section class="ml-10 w-full">
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
