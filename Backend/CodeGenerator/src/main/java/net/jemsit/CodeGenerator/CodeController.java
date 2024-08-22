@@ -1,6 +1,8 @@
 package net.jemsit.CodeGenerator;
 
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +29,8 @@ public class CodeController {
     }
 
     @GetMapping("get-all/{username}")
-    public ResponseEntity<List<Code>> getHistoryOfUser(@PathVariable String username) {
-        return ResponseEntity.ok().body(codeService.getHistory(username));
+    public ResponseEntity<Page<Code>> getHistoryOfUser(@PathVariable String username, @PathParam("page") int page, @PathParam("size") int size) {
+        return ResponseEntity.ok().body(codeService.getHistory(username, page,size));
     }
 
     @PostMapping("confirm")

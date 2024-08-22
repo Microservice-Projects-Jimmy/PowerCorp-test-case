@@ -1,13 +1,17 @@
 package net.jemsit.CodeGenerator;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class CodeService {
+public class CodeService extends HelperFunctions {
 
     private final CodeRepository codeRepository;
     private final RedisService redisService;
@@ -23,8 +27,13 @@ public class CodeService {
         return randomCode;
     }
 
-    public List<Code> getHistory(String username) {
-        return codeRepository.findByUsername(username).stream().map(Code::toCode).toList();
+    public Page<Code> getHistory(String username, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Code> codeHistory = codeRepository.findByUsername(username)
+                .stream()
+                .sorted(Comparator.comparing(CodeEntity::getId).reversed())
+                .map(Code::toCode).toList();
+        return makingPagination(codeHistory, pageable);
     }
 
     public String confirm(String username, long code) {

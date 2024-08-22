@@ -11,6 +11,11 @@ const progressBarWidth = ref(100)
 const duration = 60000
 let intervalId: number
 const otp = ref(Array(4).fill(''))
+const totalPages = ref(0)
+const showingOf = ref('')
+const totalSize = ref(0)
+let currPage = 0
+let size = 10
 
 const confirmCode = () => {
   code.value = Number(otp.value.join(''))
@@ -37,10 +42,20 @@ const startProgress = () => {
     }
   }, intervalTime)
 }
+const updateCodes = (page = 0, size = 10) => {
+  page = Math.max(0, page)
+  currPage = page
+  axios
+    .get(`${BASE_URL}/code/get-all/${localStorage.getItem('username')}?page=${page}&size=${size}`)
+    .then((res) => {
+      previosCodes.value = res.data.content
+      totalSize.value = res.data.totalElements
+      totalPages.value = res.data.totalPages
+      showingOf.value = page * size + '-' + (page + 1) * size
+    })
+}
 onMounted(() => {
-  axios.get(BASE_URL + '/code/get-all/' + localStorage.getItem('username')).then((res) => {
-    previosCodes.value = res.data
-  })
+  updateCodes()
 })
 
 const getCode = () => {
@@ -51,6 +66,7 @@ const getCode = () => {
   progressBarWidth.value = 100
   focusInput(0)
   startProgress()
+  updateCodes()
 }
 
 // OPT UI UX starts here
@@ -168,7 +184,7 @@ const resetOtp = () => {
             </svg>
             <div class="ps-4 text-sm font-normal">Type code {{ codeFromServer }}</div>
             <div
-              class="absolute bottom-0 left-0 h-1 bg-red-800"
+              class="absolute bottom-0 left-0 h-1 bg-white"
               :style="{ width: progressBarWidth + '%' }"
             ></div>
           </div>
@@ -199,7 +215,6 @@ const resetOtp = () => {
               </th>
               <th scope="col" class="px-6 py-3">Name</th>
               <th scope="col" class="px-6 py-3">Code</th>
-
               <th scope="col" class="px-6 py-3">Action</th>
             </tr>
           </thead>
@@ -237,61 +252,49 @@ const resetOtp = () => {
           </tbody>
         </table>
         <nav
+          ref="excludedArea"
           class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
           aria-label="Table navigation"
         >
           <span
-            class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto"
-            >Showing <span class="font-semibold text-gray-900 dark:text-white">1-10</span> of
-            <span class="font-semibold text-gray-900 dark:text-white">1000</span></span
+            class="text-sm font-normal text-gray-900 mb-4 md:mb-0 p-3 block w-full md:inline md:w-auto"
+            >Showing <span class="font-semibold text-gray-900">{{ showingOf }}</span> of
+            <span class="font-semibold text-gray-900">{{ totalSize }}</span></span
           >
           <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-            <li>
+            <li class="cursor-pointer">
               <a
-                href="#"
+                @click="updateCodes(--currPage, size)"
                 class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >Previous</a
               >
             </li>
-            <li>
+            <li class="cursor-pointer" v-for="n in totalPages > 5 ? 5 : totalPages" :key="n">
               <a
-                href="#"
+                @click="updateCodes(n - 1, size)"
+                v-if="n - 1 != currPage"
                 class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >1</a
+                >{{ n }}</a
               >
-            </li>
-            <li>
               <a
-                href="#"
-                class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >2</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
+                v-else
+                @click="updateCodes(n - 1, size)"
                 aria-current="page"
                 class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                >3</a
+                >{{ n }}</a
               >
             </li>
+
             <li>
               <a
-                href="#"
                 class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >4</a
+                >...</a
               >
             </li>
-            <li>
+
+            <li class="cursor-pointer">
               <a
-                href="#"
-                class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >5</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
+                @click="updateCodes(++currPage, size)"
                 class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >Next</a
               >
