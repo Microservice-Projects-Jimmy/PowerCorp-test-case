@@ -1,6 +1,8 @@
 package net.jemsit.Click;
 
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +15,8 @@ public class ClickController {
     private final ClickService clickService;
 
     @GetMapping("get-all/{username}")
-    public ResponseEntity<List<Click>> getAll(@PathVariable String username) {
-        return ResponseEntity.ok().body(clickService.getAll(username));
+    public ResponseEntity<Page<Click>> getAll(@PathVariable String username, @PathParam("size") int size, @PathParam("page") int page) {
+        return ResponseEntity.ok().body(clickService.getAll(username, page, size));
     }
 
     @PostMapping("save")

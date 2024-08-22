@@ -1,10 +1,11 @@
 package net.jemsit.Click;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -12,17 +13,19 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ClickService {
+public class ClickService extends HelperFunctions {
 
     private final ClickRepository clickRepository;
 
-    public List<Click> getAll(String username) {
-        return clickRepository
+    public Page<Click> getAll(String username, int page, int size) {
+        Pageable pageable =  PageRequest.of(page, size);
+        List<Click> coordinates = clickRepository
                 .findByUsername(username)
                 .stream()
                 .sorted(Comparator.comparing(ClickEntity::getClickedAt).reversed())
                 .map(Click::toClick)
                 .toList();
+        return makingPagination(coordinates, pageable);
     }
 
     public Click save(ClickRequest request) {
