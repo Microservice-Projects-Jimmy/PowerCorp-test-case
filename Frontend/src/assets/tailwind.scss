@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+  --code-width: 50px;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+}
+.click-history {
+  max-width: 1000px;
+  width: 1000px;
+}

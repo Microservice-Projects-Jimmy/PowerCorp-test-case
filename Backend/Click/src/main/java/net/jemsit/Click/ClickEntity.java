@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,5 +25,7 @@ public class ClickEntity {
     private float XCoordinate;
 
     private float YCoordinate;
+
+    private OffsetDateTime clickedAt;
 
 }

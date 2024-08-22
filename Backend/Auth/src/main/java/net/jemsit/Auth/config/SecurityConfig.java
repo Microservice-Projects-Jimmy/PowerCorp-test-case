@@ -47,9 +47,9 @@ public class SecurityConfig {
     @Bean
     public ApplicationRunner createAdmin(UserDetailsManager userDetailsManager, PasswordEncoder passwordEncoder) {
         return args -> {
-            if (!userDetailsManager.userExists("admin")) {
+            if (!userDetailsManager.userExists("admin@mail.com")) {
                 userDetailsManager.createUser(User.builder()
-                        .username("admin")
+                        .username("admin@mail.com")
                         .password(passwordEncoder.encode("admin"))
                         .authorities("admin")
                         .build());
