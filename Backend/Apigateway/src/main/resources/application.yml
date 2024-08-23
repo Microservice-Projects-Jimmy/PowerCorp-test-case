@@ -26,6 +26,8 @@ spring:
     name: Apigateway
   auth:
     service:
-      uri: http://localhost:8081
+      uri: ${AUTH_SERVICE_HOST}
+  config:
+    import: optional:file:.env[.properties]
 server:
   port: 8080

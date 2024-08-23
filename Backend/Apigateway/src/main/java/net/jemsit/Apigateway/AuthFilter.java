@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ServerWebExchange;
@@ -54,7 +56,6 @@ public class AuthFilter implements GlobalFilter, Ordered {
             URI uri = new URI(baseUri + "/auth/validate-token");
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", exchange.getRequest().getHeaders().get("Authorization").get(0));
-            System.out.println(headers);
             HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
             var restTemplate = new RestTemplate();
             var statusCode = restTemplate.postForObject(uri,  requestEntity, String.class);
