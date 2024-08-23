@@ -22,5 +22,11 @@
  <br> 
   <br>
 <img src="https://github.com/Microservice-Projects-Jimmy/PowerCorp-test-case/blob/main/typeCode.png" alt="type code">
+ <br> 
+  <br>
+<img src="https://github.com/Microservice-Projects-Jimmy/PowerCorp-test-case/blob/main/home.png" alt="home">
+ <br> 
+  <br>
+<img src="https://github.com/Microservice-Projects-Jimmy/PowerCorp-test-case/blob/main/click.png" alt="click">
   
 </h3>
