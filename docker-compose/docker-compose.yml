@@ -1,11 +1,95 @@
 version: '3.3'
 
 services:
+
+  frontend-server:
+    container_name: frontend
+    build:
+      context: ./frontend
+    ports:
+      - 5173:80
+
+  # Backend Start here
+  apigateway-server:
+    container_name: apigateway
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    entrypoint: ["java","-jar","/app/Apigateway.jar"]
+    working_dir: /app/
+    networks:
+      codes-network:
+    ports:
+      - 8080:8080
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app/
+  
+  
+  auth-server:
+    container_name: auth
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    entrypoint: ["java","-jar","/app/Auth.jar"]
+    working_dir: /app/
+    networks:
+      codes-network:
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app/
+    depends_on:
+      - users-db
+
+
+  codes-server:
+    container_name: codes
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    entrypoint: ["java","-jar","/app/CodeGenerator.jar"]
+    working_dir: /app/
+    networks:
+      codes-network:
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app/
+    depends_on:
+      - codes-db
+
+  clicks-server:
+    container_name: clicks
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    entrypoint: ["java","-jar","/app/Click.jar"]
+    working_dir: /app/
+    networks:
+      codes-network:
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app/
+    depends_on:
+      - clicks-db
+  # Backend End here
+
+# ------------------------------------------------------------
+
+  # Redis and DBS Start here
+
   redis:
-      container_name: redis
-      image: redis
-      ports:
-        - "6379:6379"
+    container_name: redis
+    image: redis
+    networks:
+      codes-network:
 
   users-db:
     container_name: users-db
@@ -52,7 +136,7 @@ services:
     networks:
       codes-network:
 
-
+  # Redis and DBS End here
 
 networks:
   codes-network:

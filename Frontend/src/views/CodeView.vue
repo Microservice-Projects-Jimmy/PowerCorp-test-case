@@ -127,14 +127,17 @@ const handleKeyDown = (e: KeyboardEvent) => {
   }
 }
 
-const handleInput = (index: number, value: string) => {
+const handleInput = (index: number, event: Event) => {
+  const target = event.target as HTMLInputElement
+  const value = target.value
   otp.value.splice(index, 1, value)
   if (value && index < otp.value.length - 1) {
     focusInput(index + 1)
   }
 }
 
-const handleFocus = (target: HTMLInputElement) => {
+const handleFocus = (event: FocusEvent) => {
+  const target = event.target as HTMLInputElement
   target.select()
 }
 
@@ -164,9 +167,9 @@ const resetOtp = () => {
               maxlength="1"
               class="shadow-xs flex w-[64px] items-center justify-center rounded-lg border border-stroke bg-white p-2 text-center text-2xl font-medium text-gray-5 outline-none sm:text-4xl dark:border-dark-3 dark:bg-white/5"
               :value="digit"
-              @input="handleInput(index, $event.target.value)"
+              @input="(event) => handleInput(index, event)"
               @keydown="handleKeyDown($event)"
-              @focus="handleFocus($event.target)"
+              @focus="handleFocus"
             />
           </div>
           <button
