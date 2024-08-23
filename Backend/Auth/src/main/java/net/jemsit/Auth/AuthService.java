@@ -1,5 +1,6 @@
 package net.jemsit.Auth;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import net.jemsit.Auth.config.JwtService;
 import net.jemsit.Auth.exception.UserAlreadyExistsException;
@@ -57,7 +58,14 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials", e);
         }
         var user = userRepository.findByUsername(authRequest.getUsername()).orElseThrow();
-        var jwt = jwtService.generateToken(Map.of(user.getUsername(), user.getAuthorities()),user);
+        var jwt = jwtService.generateToken(Map.of(user.getUsername(), user.getAuthorities()), user);
+        user.setToken(jwt);
+        userRepository.save(user);
         return  Auth.builder().token(jwt).build();
     }
+
+    public String validateToken() {
+        return "Valid!";
+    }
+
 }

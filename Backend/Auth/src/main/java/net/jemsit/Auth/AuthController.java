@@ -1,5 +1,7 @@
 package net.jemsit.Auth;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import net.jemsit.Auth.request.AuthRequest;
 import net.jemsit.Auth.request.RegisterRequest;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +29,10 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<Auth> login(@RequestBody AuthRequest authRequest) {
         return ResponseEntity.ok().body(authService.login(authRequest));
+    }
+
+    @PostMapping("validate-token")
+    public ResponseEntity<String> validateToken() {
+        return ResponseEntity.ok().body(authService.validateToken());
     }
 }

@@ -30,6 +30,7 @@ public class UserEntity  implements UserDetails {
     @JoinColumn(name = "username")
     private List<AuthorityEntity> authorities = new ArrayList<>();
 
+    private String token;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

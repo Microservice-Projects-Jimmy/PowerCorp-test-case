@@ -24,10 +24,18 @@ const confirmCode = () => {
   code.value = Number(otp.value.join(''))
   console.log(code.value)
   axios
-    .post(BASE_URL + '/code/confirm', {
-      username: localStorage.getItem('username'),
-      code: code.value
-    })
+    .post(
+      BASE_URL + '/code/confirm',
+      {
+        username: localStorage.getItem('username'),
+        code: code.value
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+    )
     .then((res) => {
       console.log(res)
       router.push('/clicks')
@@ -61,7 +69,11 @@ const updateCodes = (page = 0, size = 10) => {
   page = Math.max(0, page)
   currPage = page
   axios
-    .get(`${BASE_URL}/code/get-all/${localStorage.getItem('username')}?page=${page}&size=${size}`)
+    .get(`${BASE_URL}/code/get-all/${localStorage.getItem('username')}?page=${page}&size=${size}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
     .then((res) => {
       previosCodes.value = res.data.content
       totalSize.value = res.data.totalElements
@@ -70,14 +82,21 @@ const updateCodes = (page = 0, size = 10) => {
     })
 }
 onMounted(() => {
+  if (localStorage.getItem('token') == null) router.push('/')
   updateCodes()
 })
 
 const getCode = () => {
-  axios.get(BASE_URL + '/code/get-code/' + localStorage.getItem('username')).then((res) => {
-    codeFromServer.value = res.data.code
-    console.log(codeFromServer.value)
-  })
+  axios
+    .get(BASE_URL + '/code/get-code/' + localStorage.getItem('username'), {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    .then((res) => {
+      codeFromServer.value = res.data.code
+      console.log(codeFromServer.value)
+    })
   progressBarWidth.value = 100
   focusInput(0)
   startProgress()
@@ -117,15 +136,6 @@ const handleInput = (index: number, value: string) => {
 
 const handleFocus = (target: HTMLInputElement) => {
   target.select()
-}
-
-const handlePaste = (e: ClipboardEvent) => {
-  e.preventDefault()
-  const text = e.clipboardData?.getData('text') || ''
-  if (!new RegExp(`^[0-9]{${otp.value.length}}$`).test(text)) {
-    return
-  }
-  otp.value = text.split('')
 }
 
 const focusInput = (index: number) => {

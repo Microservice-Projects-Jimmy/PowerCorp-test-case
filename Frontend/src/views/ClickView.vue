@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import axios from 'axios'
+import router from '@/router'
+import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
+import { useUserStore } from '@/stores/user-store'
+const toast = useToast()
+const store = useUserStore()
 
-import { onBeforeUnmount, onMounted, ref } from 'vue'
 const coordinateHistory = ref()
 const BASE_URL = import.meta.env.VITE_API_URL
 const totalPages = ref(0)
@@ -10,17 +16,48 @@ const totalSize = ref(0)
 let currPage = 0
 let size = 10
 const excludedArea = ref<HTMLElement | null>(null)
+const sessionTimeout = ref(false)
+const sessionDuration = 4 * 60 * 1000
+let sessionTimer: ReturnType<typeof setTimeout>
+
+const startSessionTimer = () => {
+  sessionTimer = setTimeout(() => {
+    sessionTimeout.value = true
+    toast.add({
+      severity: 'info',
+      summary: 'Info',
+      detail: 'Session expired!',
+      life: 3000
+    })
+    localStorage.clear()
+    store.user = null
+    router.push('/')
+  }, sessionDuration)
+}
+
+const resetSessionTimer = () => {
+  clearTimeout(sessionTimer)
+  startSessionTimer()
+}
 
 const handleClick = (event: MouseEvent) => {
   if (excludedArea.value && excludedArea.value.contains(event.target as Node)) {
     return
   }
   axios
-    .post(BASE_URL + '/click/save', {
-      username: localStorage.getItem('username'),
-      XCoordinate: event.clientX,
-      YCoordinate: event.clientY
-    })
+    .post(
+      BASE_URL + '/click/save',
+      {
+        username: localStorage.getItem('username'),
+        XCoordinate: event.clientX,
+        YCoordinate: event.clientY
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+    )
     .then(() => {
       updateCoordinatesHistory()
     })
@@ -30,7 +67,14 @@ const updateCoordinatesHistory = (page = 0, size = 10) => {
   page = Math.max(0, page)
   currPage = page
   axios
-    .get(`${BASE_URL}/click/get-all/${localStorage.getItem('username')}?page=${page}&size=${size}`)
+    .get(
+      `${BASE_URL}/click/get-all/${localStorage.getItem('username')}?page=${page}&size=${size}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+    )
     .then((res) => {
       coordinateHistory.value = res.data.content
       totalSize.value = res.data.totalElements
@@ -40,8 +84,17 @@ const updateCoordinatesHistory = (page = 0, size = 10) => {
 }
 
 onMounted(() => {
+  if (localStorage.getItem('token') == null) router.push('/')
   updateCoordinatesHistory()
   window.addEventListener('click', handleClick)
+  startSessionTimer()
+  window.addEventListener('click', resetSessionTimer)
+  window.addEventListener('keydown', resetSessionTimer)
+})
+onUnmounted(() => {
+  clearTimeout(sessionTimer)
+  window.removeEventListener('click', resetSessionTimer)
+  window.removeEventListener('keydown', resetSessionTimer)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('click', handleClick)
@@ -50,6 +103,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="flex flex-col items-center">
+    <Toast />
     <h1 class="my-10">Welcome to clicks page! Click somewhere!</h1>
     <section class="ml-10 w-full">
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
