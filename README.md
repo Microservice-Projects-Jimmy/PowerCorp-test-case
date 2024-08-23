@@ -13,5 +13,14 @@
    <br> 
   <br>
 <img src="https://github.com/Microservice-Projects-Jimmy/PowerCorp-test-case/blob/main/login.png" alt="login">
+ <br> 
+  <br>
+<img src="https://github.com/Microservice-Projects-Jimmy/PowerCorp-test-case/blob/main/code.png" alt="code">
+ <br> 
+  <br>
+<img src="https://github.com/Microservice-Projects-Jimmy/PowerCorp-test-case/blob/main/getCode.png" alt="get code">
+ <br> 
+  <br>
+<img src="https://github.com/Microservice-Projects-Jimmy/PowerCorp-test-case/blob/main/typeCode.png" alt="type code">
   
 </h3>
