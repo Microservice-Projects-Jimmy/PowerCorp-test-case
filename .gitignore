@@ -1,2 +1,5 @@
 **/pg_data_users/**
 **/pg_data_codes/**
+docker-compose/pg_data_clicks/
+docker-compose/pg_data_users/
+docker-compose/pg_data_codes/
