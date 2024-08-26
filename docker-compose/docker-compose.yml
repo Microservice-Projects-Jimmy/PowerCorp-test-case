@@ -94,6 +94,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: users
+      PGDATA: /var/lib/postgresql/data/users/
     volumes:
       - ./pg_data_users:/var/lib/postgresql/data
     networks:
@@ -106,6 +107,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: codes
+      PGDATA: /var/lib/postgresql/data/codes/
     volumes:
       - ./pg_data_codes:/var/lib/postgresql/data
     networks:
@@ -118,6 +120,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: clicks
+      PGDATA: /var/lib/postgresql/data/clicks/
     volumes:
       - ./pg_data_clicks:/var/lib/postgresql/data
     networks:
