@@ -13,6 +13,7 @@ dist
 dist-ssr
 coverage
 *.local
+docker-comose/pg_data_clicks/
 
 /cypress/videos/
 /cypress/screenshots/
