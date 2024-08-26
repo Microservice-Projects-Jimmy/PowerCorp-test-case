@@ -1,4 +1,14 @@
 # PowerCorp-test-case
+
+<h3>
+To clone ony docker-compose files use this commands
+<ul>
+  <li>git clone -n --depth=1 --filter=tree:0   https://github.com/Microservice-Projects-Jimmy/PowerCorp-test-case.git</li>
+  <li>cd PowerCorp-test-case</li>
+  <li>git checkout</li>
+</ul>
+</h3>
+
 <br>
 <img src="https://github.com/Microservice-Projects-Jimmy/PowerCorp-test-case/blob/main/System-Design.png" alt="system design">
 
