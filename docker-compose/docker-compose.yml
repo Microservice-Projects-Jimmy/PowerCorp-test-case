@@ -15,7 +15,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    restart: always
     entrypoint: ["java","-jar","/app/Apigateway.jar"]
     working_dir: /app/
     networks:
@@ -33,7 +32,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    restart: always
     entrypoint: ["java","-jar","/app/Auth.jar"]
     working_dir: /app/
     networks:
@@ -51,7 +49,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    restart: always
     entrypoint: ["java","-jar","/app/CodeGenerator.jar"]
     working_dir: /app/
     networks:
@@ -68,7 +65,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    restart: always
     entrypoint: ["java","-jar","/app/Click.jar"]
     working_dir: /app/
     networks:
@@ -94,7 +90,6 @@ services:
   users-db:
     container_name: users-db
     image: postgres:12.9-alpine
-    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
@@ -107,7 +102,6 @@ services:
   codes-db:
     container_name: codes-db
     image: postgres:12.9-alpine
-    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
@@ -120,7 +114,6 @@ services:
   clicks-db:
     container_name: clicks-db
     image: postgres:12.9-alpine
-    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
